@@ -16,7 +16,7 @@ public class Global {
     public static final String session_attr_currentUser = "currentSessionUser";
 
     private static Map<String, User> getAllAccountsFromFile() {
-        Map<String, User> result = new HashMap<String, User>();
+        Map<String, User> result = new HashMap<>();
         Scanner scan = new Scanner(Global.class.getResourceAsStream("Users.txt"));
         while (scan.hasNextLine()) {
             String nextLine = scan.nextLine();

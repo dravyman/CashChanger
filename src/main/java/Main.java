@@ -1,8 +1,9 @@
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import servlets.IndexServlet;
+import servlets.webServlets.IndexServlet;
 import org.eclipse.jetty.server.Server;
+import servlets.webServlets.AllInfoServlet;
 
 public class Main {
 
@@ -14,8 +15,8 @@ public class Main {
         servletContextHandler.setSessionHandler(new SessionHandler());
         servletContextHandler.setResourceBase("src/main/webapp");
 
-        ServletHolder indexServletHolder = new ServletHolder(new IndexServlet());
-        servletContextHandler.addServlet(indexServletHolder, "/indexServlet");
+        servletContextHandler.addServlet(new ServletHolder(new IndexServlet()), "/login");
+        servletContextHandler.addServlet(new ServletHolder(new AllInfoServlet()), "/info");
 
         server.setHandler(servletContextHandler);
 
