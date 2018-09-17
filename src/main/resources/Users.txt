@@ -1,2 +1,2 @@
-Emelian - 100000
-TestUser - 100
+Emelian : 100000
+TestUser : 100
