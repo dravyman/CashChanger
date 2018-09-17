@@ -19,7 +19,6 @@
             <artifactId>jetty-servlet</artifactId>
             <version>RELEASE</version>
         </dependency>
-
     </dependencies>
 
 </project>

@@ -2,7 +2,6 @@ package utils;
 
 import authorization.User;
 
-import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;

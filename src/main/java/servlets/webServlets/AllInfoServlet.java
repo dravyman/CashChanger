@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AllInfoServlet extends CopyHtmlPageServlet {
-    Map<String, String> replacements = new HashMap<>();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -25,14 +24,18 @@ public class AllInfoServlet extends CopyHtmlPageServlet {
         if (user == null || user.getLogin().isEmpty()) {
             request.getRequestDispatcher("/login").forward(request, response);
         } else {
-            StringBuilder allUsers = new StringBuilder("<ol id=\"allUsers\">");
-            DataAdapter.getAllUser().forEach((login, userInfo) -> {
-                String userInfoLine = "<li>Login: " + login + " : " + userInfo.getCurrentMoney() + "</li>";
-                allUsers.append(userInfoLine);
-            });
-            allUsers.append("</ol>");
-            replacements.put("<ol id=\"allUsers\"></ol>", allUsers.toString());
+            prepareAllInfoReplacments();
             sendHtmlPageWithReplace(response, "/webapp/html/allUsers.html", replacements);
         }
+    }
+
+    private void prepareAllInfoReplacments() {
+        StringBuilder allUsers = new StringBuilder("<ol id=\"allUsers\">");
+        DataAdapter.getAllUser().forEach((login, userInfo) -> {
+            String userInfoLine = "<li>Login: " + login + " : " + userInfo.getCurrentMoney() + "</li>";
+            allUsers.append(userInfoLine);
+        });
+        allUsers.append("</ol>");
+        replacements.put("<ol id=\"allUsers\"></ol>", allUsers.toString());
     }
 }

@@ -5,9 +5,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class CopyHtmlPageServlet extends HttpServlet {
+
+    Map<String, String> replacements = new HashMap<>();
+
     void sendHtmlPage(HttpServletResponse response, String pagePath) {
         try (BufferedReader bufReader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(pagePath)))) {
             response.setContentType("text/html;charset=utf-8");
@@ -45,7 +49,9 @@ public abstract class CopyHtmlPageServlet extends HttpServlet {
     }
 
     private void localReplace(StringBuilder builder, String x, String y) {
-        int start = builder.indexOf(x);
-        builder.replace(start, start + x.length(), y);
+        while (builder.indexOf(x) >= 0) {
+            int start = builder.indexOf(x);
+            builder.replace(start, start + x.length(), y);
+        }
     }
 }
