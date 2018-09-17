@@ -1,7 +1,9 @@
 <html>
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
 </head>
-<body>
+<body ng-app="myApp">
+<div ng-controller="myAppController as contr">
     <h1>Hello dear, <replace id="1"></replace></h1>
 
     <form action="logout" method="post">
@@ -12,5 +14,15 @@
         <span>Login: <replace id="1"></replace></span><br>
         <span>Cash: <replace id="2"></replace></span>
     </p>
+    <p>
+        <span>{{temp}}</span>
+    </p>
+    <script>
+        angular.module('myApp', [])
+            .controller('myAppController', ['$scope', '$http', function($scope, $http) {
+                $scope.temp = "de[d[e[e[de[dded";
+            }]);
+    </script>
+</div>
 </body>
 </html>
