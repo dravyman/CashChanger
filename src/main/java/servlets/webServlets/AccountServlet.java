@@ -25,6 +25,21 @@ public class AccountServlet extends CopyHtmlPageServlet {
         }
     }
 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("#### Post to AccountServlet");
+
+        HttpSession session = request.getSession(true);
+        User user = (User) (session.getAttribute(Global.session_attr_currentUser));
+
+        if (user == null || user.getLogin().isEmpty()) {
+            response.sendRedirect("/login");
+        } else {
+            response.getWriter().write(user.toJSONString());
+        }
+
+    }
+
     private void prepareAccpontReplacements(User user) {
         replacements.put("#replaceMe1", "\"" + user.getLogin() + "\"");
         replacements.put("#replaceMe2", String.valueOf(user.getCurrentMoney()));

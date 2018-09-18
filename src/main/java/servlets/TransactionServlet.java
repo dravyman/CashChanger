@@ -19,14 +19,15 @@ public class TransactionServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         try {
-            System.out.println("#### Get to TransactionServlet");
+            System.out.println("#### Post to TransactionServlet");
 
             HttpSession session = request.getSession(true);
             User user = (User) (session.getAttribute(Global.session_attr_currentUser));
 
             if (user == null || user.getLogin().isEmpty()) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.sendRedirect("/login");
                 return;
             }
@@ -36,8 +37,9 @@ public class TransactionServlet extends HttpServlet {
                 case "sendMoney":
                     String userTo = jsonObject.getString("userTo");
                     long amount = jsonObject.getLong("amount");
-                    checkAccountCash(user, amount);
-                    checkUserExists(userTo);
+                    InfoException resModal = sendMoney(user.getLogin(), userTo, amount);
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    response.getWriter().write(resModal.toJSONString());
                     break;
             }
         } catch (InfoException ex) {
@@ -48,8 +50,23 @@ public class TransactionServlet extends HttpServlet {
         }
     }
 
-    private void checkAccountCash(User user, long amount) throws InfoException {
-        if (DataAdapter.getUser(user.getLogin()).getCurrentMoney() < amount) {
+    private InfoException sendMoney(String userFrom, String userTo, long amount) throws InfoException {
+        checkAmount(amount);
+        checkAccountCash(userFrom, amount);
+        checkUserExists(userTo);
+        DataAdapter.getUser(userFrom).decreaseCash(amount);
+        DataAdapter.getUser(userTo).increaseCash(amount);
+        return new InfoException(AlertType.INFORMATION.name(), "Успех", "Перевод средств осуществлен успешно", "Вы перевели сумму = " + amount);
+    }
+
+    private void checkAmount(long amount) throws InfoException {
+        if (amount <= 0) {
+            throw new InfoException(AlertType.ERROR.name(), "Неудача", "Перевод средств не осуществлен", "Списание должно быть положительным");
+        }
+    }
+
+    private void checkAccountCash(String user, long amount) throws InfoException {
+        if (DataAdapter.getUser(user).getCurrentMoney() < amount) {
             throw new InfoException(AlertType.ERROR.name(), "Неудача", "Перевод средств не осуществлен", "Недостаточно средств");
         }
     }

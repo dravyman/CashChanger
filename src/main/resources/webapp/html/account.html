@@ -14,8 +14,11 @@
         <div class="row">
             <h1>Hello dear, {{user.login}}</h1>
 
+            <form action="info" method="get">
+                <button name="submit" class="btn btn-sm btn-primary" value="info" type="submit" style="position: absolute;right: 100px;top: 30px;">All info</button>
+            </form>
             <form action="logout" method="post">
-                <button name="submit" class="btn btn-sm btn-danger" value="Logout" type="submit" style="position: absolute;right: 20px;top: 30px;">Log out</button>
+                <button id="logoutbtn" name="submit" class="btn btn-sm btn-danger" value="Logout" type="submit" style="position: absolute;right: 20px;top: 30px;">Log out</button>
             </form>
             <p>
                 <span>It is information about your account:</span><br>
@@ -25,18 +28,18 @@
         </div>
         <div class="row">
             <form name = "transactionForm">
-                <div class="col-md-4">
-                    <input class="form-control col-md-4" id="loginId" name="loginId"
-                           ng-model="transaction.otherUser"
+                <div class="col-sm-4">
+                    <input class="form-control req" id="loginId" name="loginId"
+                           ng-model="transaction.otherUser" required
                            type="text" placeholder="Fill user login">
                 </div>
-                <div class="col-md-4">
-                    <input class="form-control col-md-4" id="cashAmount" name="cashAmount"
-                           ng-model="transaction.cash"
+                <div class="col-sm-4">
+                    <input class="form-control req" id="cashAmount" name="cashAmount"
+                           ng-model="transaction.cash" required
                            type="number" placeholder="How much">
                 </div>
-                <div class="col-md-4">
-                    <button class="btn btn-primary col-md-4" ng-click="sendMoney()">Send cash</button>
+                <div class="col-sm-4">
+                    <button class="btn btn-primary" ng-click="sendMoney()">Send cash</button>
                 </div>
             </form>
         </div>
@@ -67,19 +70,35 @@
             $scope.initialize = function () {
                 $scope.temp = "de[d[e[e[de[dded";
                 $scope.user = {};
-                $scope.user.login = #replaceMe1;
-                $scope.user.cash = #replaceMe2;
+                $scope.updateUser();
                 $scope.transaction = {};
             };
 
+            $scope.updateUser = function () {
+                $http.post('/account')
+                    .then(function (response) {
+                        $scope.user = response.data;
+                    }, function (response) {
+                        processException(response.data);
+                    });
+            };
+
             $scope.sendMoney = function () {
+                if (!$scope.transaction.otherUser || !$scope.transaction.cash) {
+                    return;
+                }
                 $http.post('/transactions',
                     {"type" : 'sendMoney',
                         "userTo" : $scope.transaction.otherUser,
                         "amount" : $scope.transaction.cash,
                     })
                     .then(function (response) {
-                        processException(response.data);
+                        // if (response.data.indexOf("<html>") == 0) { // TODO Redirect if not json (html - page)
+                        //     $("#logoutbtn").click();
+                        // } else {
+                            $scope.updateUser();
+                            processException(response.data);
+                        // }
                     }, function (response) {
                         processException(response.data);
                     });
@@ -127,6 +146,13 @@
         background-color: #fff;
         color: #5bc0de;
         border-color: #5bc0de
+    }
+    .req.ng-invalid {
+        background-color: #fae2e2;
+    }
+
+    .req.ng-invalid:focus {
+        background-color: transparent;
     }
 </style>
 </body>
