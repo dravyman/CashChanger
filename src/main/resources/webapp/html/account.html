@@ -2,6 +2,7 @@
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 </head>
 <body ng-app="myApp">
 <div ng-controller="myAppController as contr">
@@ -37,6 +38,24 @@
         </div>
     </div>
 </div>
+<div id="errorWithFullInfo" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog"
+     aria-labelledby="LabelErrorWithInfo"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="titleErrorFullInfo">Title here<span id="typeErrorFullInfo" class="fa"></span></h3>
+            </div>
+            <div class="modal-body">
+                <p id="headErrorFullInfo"></p>
+                <p id="bodyErrorFullInfo"></p>
+            </div>
+            <div class="modal-footer">
+                <button id="buttonErrorFullInfo" class="btn btn-danger" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     angular.module('myApp', [])
@@ -50,11 +69,48 @@
             };
 
             $scope.sendMoney = function () {
-                console.log("I will sebd money");
+                $http.post('/transactions',
+                    {"type" : 'sendMoney',
+                        "userTo" : $scope.transaction.otherUser,
+                        "amount" : $scope.transaction.cash,
+                    })
+                    .then(function (response) {
+                        console.log(response.data);
+                        processException(response.data);
+                    }, function (response) {
+                        console.log(response.data);
+                        processException(response.data);
+                    });
             };
 
             $scope.initialize();
         }]);
+
+    function processException(infExc, isLarge) {
+        console.log(infExc);
+        console.log(infExc.alertType);
+        let alertClass = "pull-right fa fa-2x";
+        let btnClass = "btn";
+        if (infExc.alertType == "WARNING") {
+            alertClass = alertClass + " fa-warning fa-warning";
+            btnClass = btnClass + " btn-warning";
+        } else if (infExc.alertType == "ERROR") {
+            alertClass = alertClass + " fa-exclamation-triangle fa-danger";
+            btnClass = btnClass + " btn-danger";
+        } else if (infExc.alertType == "INFORMATION") {
+            alertClass = alertClass + " fa-info-circle fa-info";
+            btnClass = btnClass + " btn-info";
+        }
+        let reg = new RegExp('\n', 'g');
+        $('#titleErrorFullInfo').contents()[0].nodeValue = infExc.title;
+        $('#typeErrorFullInfo').removeAttr('class').attr('class', alertClass);
+        $('#headErrorFullInfo').html(infExc.header.replace(reg, "<br/>"));
+        $('#bodyErrorFullInfo').html(infExc.content.replace(reg, "<br/>"));
+        $('#buttonErrorFullInfo').removeAttr('class').attr('class', btnClass);
+        $('#errorWithFullInfo').children('div').removeAttr('class')
+            .attr('class', isLarge ? "modal-dialog modal-lg modal-90-percent-width" : "modal-dialog");
+        $('#errorWithFullInfo').modal('show');
+    }
 </script>
 </body>
 </html>

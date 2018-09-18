@@ -19,7 +19,7 @@ public abstract class CopyHtmlPageServlet extends HttpServlet {
             PrintWriter wri = response.getWriter();
             String s = bufReader.readLine();
             while (s != null) {
-                wri.write(s);
+                wri.write(s + "\n");
                 s = bufReader.readLine();
             }
         } catch (Exception ex) {
@@ -38,10 +38,10 @@ public abstract class CopyHtmlPageServlet extends HttpServlet {
             do {
                 s = bufReader.readLine();
                 if (s == null) break;
-                builder.append(s);
+                builder.append(s).append("\n");
             } while (s != null);
             replacements.forEach((x, y) -> localReplace(builder, x, y));
-            wri.write(builder.toString());
+            wri.write(builder.toString() + "\n");
         } catch (Exception ex) {
             ex.printStackTrace();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
