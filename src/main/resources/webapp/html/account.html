@@ -1,28 +1,60 @@
 <html>
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body ng-app="myApp">
 <div ng-controller="myAppController as contr">
-    <h1>Hello dear, <replace id="1"></replace></h1>
+    <div class="container">
+        <div class="row">
+            <h1>Hello dear, {{user.login}}</h1>
 
-    <form action="logout" method="post">
-        <button name="submit" value="Logout" type="submit" style="position: absolute;right: 20px;top: 30px;">Log out</button>
-    </form>
-    <p>
-        <span>It is information about your account:</span><br>
-        <span>Login: <replace id="1"></replace></span><br>
-        <span>Cash: <replace id="2"></replace></span>
-    </p>
-    <p>
-        <span>{{temp}}</span>
-    </p>
-    <script>
-        angular.module('myApp', [])
-            .controller('myAppController', ['$scope', '$http', function($scope, $http) {
-                $scope.temp = "de[d[e[e[de[dded";
-            }]);
-    </script>
+            <form action="logout" method="post">
+                <button name="submit" class="btn btn-sm btn-danger" value="Logout" type="submit" style="position: absolute;right: 20px;top: 30px;">Log out</button>
+            </form>
+            <p>
+                <span>It is information about your account:</span><br>
+                <span>Login: {{user.login}}</span><br>
+                <span>Cash: {{user.cash}}</span>
+            </p>
+        </div>
+        <div class="row">
+            <form name = "transactionForm">
+                <div class="col-md-4">
+                    <input class="form-control col-md-4" id="loginId" name="loginId"
+                           ng-model="transaction.otherUser"
+                           type="text" placeholder="Fill user login">
+                </div>
+                <div class="col-md-4">
+                    <input class="form-control col-md-4" id="cashAmount" name="cashAmount"
+                           ng-model="transaction.cash"
+                           type="number" placeholder="How much">
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-primary col-md-4" ng-click="sendMoney()">Send cash</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
+<script>
+    angular.module('myApp', [])
+        .controller('myAppController', ['$scope', '$http', function($scope, $http) {
+            $scope.initialize = function () {
+                $scope.temp = "de[d[e[e[de[dded";
+                $scope.user = {};
+                $scope.user.login = #replaceMe1;
+                $scope.user.cash = #replaceMe2;
+                $scope.transaction = {};
+            };
+
+            $scope.sendMoney = function () {
+                console.log("I will sebd money");
+            };
+
+            $scope.initialize();
+        }]);
+</script>
 </body>
 </html>

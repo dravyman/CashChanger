@@ -26,7 +26,7 @@ public class AccountServlet extends CopyHtmlPageServlet {
     }
 
     private void prepareAccpontReplacements(User user) {
-        replacements.put("<replace id=\"1\"></replace>", user.getLogin());
-        replacements.put("<replace id=\"2\"></replace>", String.valueOf(user.getCurrentMoney()));
+        replacements.put("#replaceMe1", "\"" + user.getLogin() + "\"");
+        replacements.put("#replaceMe2", String.valueOf(user.getCurrentMoney()));
     }
 }
