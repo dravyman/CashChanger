@@ -1,16 +1,159 @@
 <html>
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
-<body>
-    <h1>Hello dear, <replace id="1"></replace></h1>
+<body ng-app="myApp">
+<div ng-controller="myAppController as contr">
+    <div class="container">
+        <div class="row">
+            <h1>Hello dear, {{user.login}}</h1>
 
-    <form action="logout" method="post">
-        <button name="submit" value="Logout" type="submit" style="position: absolute;right: 20px;top: 30px;">Log out</button>
-    </form>
-    <p>
-        <span>It is information about your account:</span><br>
-        <span>Login: <replace id="1"></replace></span><br>
-        <span>Cash: <replace id="2"></replace></span>
-    </p>
+            <form action="info" method="get">
+                <button name="submit" class="btn btn-sm btn-primary" value="info" type="submit" style="position: absolute;right: 100px;top: 30px;">All info</button>
+            </form>
+            <form action="logout" method="post">
+                <button id="logoutbtn" name="submit" class="btn btn-sm btn-danger" value="Logout" type="submit" style="position: absolute;right: 20px;top: 30px;">Log out</button>
+            </form>
+            <p>
+                <span>It is information about your account:</span><br>
+                <span>Login: {{user.login}}</span><br>
+                <span>Cash: {{user.cash}}</span>
+            </p>
+        </div>
+        <div class="row">
+            <form name = "transactionForm">
+                <div class="col-sm-4">
+                    <input class="form-control req" id="loginId" name="loginId"
+                           ng-model="transaction.otherUser" required
+                           type="text" placeholder="Fill user login">
+                </div>
+                <div class="col-sm-4">
+                    <input class="form-control req" id="cashAmount" name="cashAmount"
+                           ng-model="transaction.cash" required
+                           type="number" placeholder="How much">
+                </div>
+                <div class="col-sm-4">
+                    <button class="btn btn-primary" ng-click="sendMoney()">Send cash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="errorWithFullInfo" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog"
+     aria-labelledby="LabelErrorWithInfo"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="titleErrorFullInfo">Title here<span id="typeErrorFullInfo" class="fa"></span></h3>
+            </div>
+            <div class="modal-body">
+                <p id="headErrorFullInfo"></p>
+                <p id="bodyErrorFullInfo"></p>
+            </div>
+            <div class="modal-footer">
+                <button id="buttonErrorFullInfo" class="btn btn-danger" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    angular.module('myApp', [])
+        .controller('myAppController', ['$scope', '$http', function($scope, $http) {
+            $scope.initialize = function () {
+                $scope.temp = "de[d[e[e[de[dded";
+                $scope.user = {};
+                $scope.updateUser();
+                $scope.transaction = {};
+            };
+
+            $scope.updateUser = function () {
+                $http.post('/account')
+                    .then(function (response) {
+                        $scope.user = response.data;
+                    }, function (response) {
+                        processException(response.data);
+                    });
+            };
+
+            $scope.sendMoney = function () {
+                if (!$scope.transaction.otherUser || !$scope.transaction.cash) {
+                    return;
+                }
+                $http.post('/transactions',
+                    {"type" : 'sendMoney',
+                        "userTo" : $scope.transaction.otherUser,
+                        "amount" : $scope.transaction.cash,
+                    })
+                    .then(function (response) {
+                        // if (response.data.indexOf("<html>") == 0) { // TODO Redirect if not json (html - page)
+                        //     $("#logoutbtn").click();
+                        // } else {
+                            $scope.updateUser();
+                            processException(response.data);
+                        // }
+                    }, function (response) {
+                        processException(response.data);
+                    });
+            };
+
+            $scope.initialize();
+        }]);
+
+    function processException(infExc, isLarge) {
+        let alertClass = "pull-right fa fa-2x";
+        let btnClass = "btn";
+        if (infExc.alertType == "WARNING") {
+            alertClass = alertClass + " fa-warning fa-warning";
+            btnClass = btnClass + " btn-warning";
+        } else if (infExc.alertType == "ERROR") {
+            alertClass = alertClass + " fa-exclamation-triangle fa-danger";
+            btnClass = btnClass + " btn-danger";
+        } else if (infExc.alertType == "INFORMATION") {
+            alertClass = alertClass + " fa-info-circle fa-info";
+            btnClass = btnClass + " btn-info";
+        }
+        let reg = new RegExp('\n', 'g');
+        $('#titleErrorFullInfo').contents()[0].nodeValue = infExc.title;
+        $('#typeErrorFullInfo').removeAttr('class').attr('class', alertClass);
+        $('#headErrorFullInfo').html(infExc.header.replace(reg, "<br/>"));
+        $('#bodyErrorFullInfo').html(infExc.content.replace(reg, "<br/>"));
+        $('#buttonErrorFullInfo').removeAttr('class').attr('class', btnClass);
+        $('#errorWithFullInfo').children('div').removeAttr('class')
+            .attr('class', isLarge ? "modal-dialog modal-lg modal-90-percent-width" : "modal-dialog");
+        $('#errorWithFullInfo').modal('show');
+    }
+</script>
+<style>
+    .fa-danger {
+        background-color: #fff;
+        color: #d43f3a;
+        border-color: #d43f3a
+    }
+    .fa-warning {
+        background-color: #fff;
+        color: #eea236;
+        border-color: #eea236
+    }
+    .fa-info {
+        background-color: #fff;
+        color: #5bc0de;
+        border-color: #5bc0de
+    }
+    .req.ng-invalid {
+        background-color: #fae2e2;
+    }
+
+    .req.ng-invalid:focus {
+        background-color: transparent;
+    }
+</style>
 </body>
 </html>

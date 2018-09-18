@@ -1,6 +1,7 @@
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import servlets.TransactionServlet;
 import servlets.webServlets.AccountServlet;
 import servlets.webServlets.IndexServlet;
 import org.eclipse.jetty.server.Server;
@@ -21,6 +22,7 @@ public class Main {
         servletContextHandler.addServlet(new ServletHolder(new AllInfoServlet()), "/info");
         servletContextHandler.addServlet(new ServletHolder(new AccountServlet()), "/account");
         servletContextHandler.addServlet(new ServletHolder(new LogOutServlet()), "/logout");
+        servletContextHandler.addServlet(new ServletHolder(new TransactionServlet()), "/transactions");
 
         server.setHandler(servletContextHandler);
 
