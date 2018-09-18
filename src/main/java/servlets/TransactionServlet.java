@@ -16,6 +16,7 @@ import org.json.JSONTokener;
 
 public class TransactionServlet extends HttpServlet {
 
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
@@ -44,19 +45,18 @@ public class TransactionServlet extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write(ex.toJSONString());
-            System.out.println(ex.toJSONString());
         }
     }
 
     private void checkAccountCash(User user, long amount) throws InfoException {
         if (DataAdapter.getUser(user.getLogin()).getCurrentMoney() < amount) {
-            throw new InfoException(AlertType.ERROR.name(), "Неудача", "Загрузка опросника на сервер не удалась", "Произошла какая-то ошибка");
+            throw new InfoException(AlertType.ERROR.name(), "Неудача", "Перевод средств не осуществлен", "Недостаточно средств");
         }
     }
 
     private void checkUserExists(String userTo) throws InfoException {
         if (DataAdapter.getUser(userTo) == null) {
-            throw new InfoException(AlertType.ERROR.name(), "Неудача", "Загрузка опросника на сервер не удалась", "Произошла какая-то ошибка");
+            throw new InfoException(AlertType.ERROR.name(), "Неудача", "Перевод средств не осуществлен", "Пользователь не найден");
         }
     }
 }
