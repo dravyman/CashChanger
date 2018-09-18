@@ -1,6 +1,5 @@
 package authorization;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
