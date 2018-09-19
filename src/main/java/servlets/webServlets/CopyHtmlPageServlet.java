@@ -1,5 +1,7 @@
 package servlets.webServlets;
 
+import authorization.User;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -28,6 +30,10 @@ public abstract class CopyHtmlPageServlet extends HttpServlet {
         }
     }
 
+
+    void sendHtmlPageWithReplace(HttpServletResponse response, String pagePath) {
+        sendHtmlPageWithReplace(response, pagePath, replacements);
+    }
     void sendHtmlPageWithReplace(HttpServletResponse response, String pagePath, Map<String, String> replacements) {
         try (BufferedReader bufReader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(pagePath)))) {
             response.setContentType("text/html;charset=utf-8");
@@ -53,5 +59,26 @@ public abstract class CopyHtmlPageServlet extends HttpServlet {
             int start = builder.indexOf(x);
             builder.replace(start, start + x.length(), y);
         }
+    }
+
+    protected void prepareReplacements() {
+        replacements = new HashMap<>();
+        replacements.put("<style></style>", getStyle("/webapp/css/style.css"));
+    }
+
+    private String getStyle(String cssPath) {
+        StringBuilder builder = new StringBuilder("<style>\n");
+        try (BufferedReader bufReader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(cssPath)))) {
+            String s;
+            do {
+                s = bufReader.readLine();
+                if (s == null) break;
+                builder.append(s).append("\n");
+            } while (s != null);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        builder.append("</style>");
+        return builder.toString();
     }
 }

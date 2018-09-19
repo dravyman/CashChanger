@@ -1,0 +1,72 @@
+.fa-danger {
+    background-color: #fff;
+    color: #d43f3a;
+    border-color: #d43f3a
+}
+.fa-warning {
+    background-color: #fff;
+    color: #eea236;
+    border-color: #eea236
+}
+.fa-info {
+    background-color: #fff;
+    color: #5bc0de;
+    border-color: #5bc0de
+}
+.fa-revolut {
+    background-color: #c7cdcd;
+    color: #294ebe;
+    border-color: #6246d3;
+}
+.req.ng-invalid {
+    background-color: #fae2e2;
+}
+
+.req.ng-invalid:focus {
+    background-color: transparent;
+}
+.animation {
+    /*-webkit-animation-name: rotator 1s linear infinite;*/
+    /*-moz-animation: rotator 1s linear infinite;*/
+    /*-ms-animation: rotator 1s linear infinite;*/
+    /*-o-animation: rotator 1s linear infinite;*/
+    animation: rotator 9s linear infinite;
+}
+@keyframes rotator  {
+    0% {
+        transform: rotateX(0deg) rotateY(0deg);
+        background-color: #c7cdcd; color: #0a56b4; border-color: #6246d3;
+    }
+    /*35% {background-color: #c7cdcd;}*/
+    38% {background-color: #c7cdcd;}
+    41% {background-color: #ffffff;}
+    44% {background-color: #c7cdcd;}
+    /*47% {background-color: #c7cdcd;}*/
+
+    83% {
+        transform: rotateX(0deg) rotateY(0deg);
+        background-color: #c7cdcd; color: #0a56b4; border-color: #6246d3;
+    }
+
+    85% {
+        background-color: #c7cdcd; color: #5c57bd; border-color: #6246d3;
+    }
+
+    90% {
+        transform: rotateX(10deg) rotateY(360deg);
+        background-color: #ffffff; color: #be38b3; border-color: #6246d3;
+    }
+
+    95% {
+        background-color: #c7cdcd; color: #5c57bd; border-color: #6246d3;
+    }
+
+    96% {
+        transform: rotateX(180deg) rotateY(180deg);
+    }
+
+    100% {
+        transform: rotateX(350deg) rotateY(360deg);
+        background-color: #c7cdcd; color: #0a56b4; border-color: #6246d3;
+    }
+}

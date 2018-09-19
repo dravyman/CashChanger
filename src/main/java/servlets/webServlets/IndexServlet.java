@@ -22,7 +22,8 @@ public class IndexServlet extends CopyHtmlPageServlet {
             response.setContentType("text/html;charset=utf-8");
             request.getRequestDispatcher("/account").forward(request, response); // TODO change on /account path
         } else {
-            sendHtmlPage(response, "/webapp/html/login.html");
+            super.prepareReplacements();
+            sendHtmlPageWithReplace(response, "/webapp/html/login.html");
         }
     }
 

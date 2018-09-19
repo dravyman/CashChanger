@@ -13,7 +13,7 @@
 <div ng-controller="myAppController as contr">
     <div class="container"><div class="row">
         <div class="col-xs-6">
-            <h2 style="color: #414F3F;"><span class="fa fa-revolut fa-credit-card"></span> Hello dear, {{user.login}}</h2>
+            <h2 style="color: #414F3F;"><span id="imagesLogo" class="animation fa fa-revolut fa-credit-card"></span> Hello dear, {{user.login}}</h2>
         </div>
         <div class="col-xs-6">
             <form action="info" method="get">
@@ -81,13 +81,24 @@
                 $scope.transaction = {};
             };
 
+            $scope.stopLogoAnimation = function () {
+                document.getElementById("imagesLogo").className = "animation fa fa-revolut fa-credit-card";
+            };
+
+            $scope.startLogoAnimation = function () {
+                document.getElementById("imagesLogo").className = "animation fa fa-revolut fa-credit-card";
+            };
+
             $scope.updateUser = function () {
                 $http.post('/account')
                     .then(function (response) {
                         $scope.user = response.data;
+                        $scope.stopLogoAnimation();
                     }, function (response) {
                         processException(response.data);
+                        $scope.stopLogoAnimation();
                     });
+                $scope.startLogoAnimation();
             };
 
             $scope.sendMoney = function () {
@@ -103,12 +114,15 @@
                         // if (response.data.indexOf("<html>") == 0) { // TODO Redirect if not json (html - page)
                         //     $("#logoutbtn").click();
                         // } else {
-                            $scope.updateUser();
-                            processException(response.data);
+                        $scope.updateUser();
+                        processException(response.data);
+                        $scope.stopLogoAnimation();
                         // }
                     }, function (response) {
                         processException(response.data);
+                        $scope.stopLogoAnimation();
                     });
+                $scope.startLogoAnimation();
             };
 
             $scope.initialize();
@@ -138,34 +152,6 @@
         $('#errorWithFullInfo').modal('show');
     }
 </script>
-<style>
-    .fa-danger {
-        background-color: #fff;
-        color: #d43f3a;
-        border-color: #d43f3a
-    }
-    .fa-warning {
-        background-color: #fff;
-        color: #eea236;
-        border-color: #eea236
-    }
-    .fa-info {
-        background-color: #fff;
-        color: #5bc0de;
-        border-color: #5bc0de
-    }
-    .fa-revolut {
-        background-color: #c7cdcd;
-        color: #294ebe;
-        border-color: #6246d3;
-    }
-    .req.ng-invalid {
-        background-color: #fae2e2;
-    }
-
-    .req.ng-invalid:focus {
-        background-color: transparent;
-    }
-</style>
+<style></style>
 </body>
 </html>

@@ -41,6 +41,14 @@ public class TransactionServlet extends HttpServlet {
                     response.setStatus(HttpServletResponse.SC_OK);
                     response.getWriter().write(resModal.toJSONString());
                     break;
+                case "sendMoney_twoUsers":
+                    String userFrom = jsonObject.getString("userFrom");
+                    userTo = jsonObject.getString("userTo");
+                    amount = jsonObject.getLong("amount");
+                    resModal = sendMoney(userFrom, userTo, amount);
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    response.getWriter().write(resModal.toJSONString());
+                    break;
             }
         } catch (InfoException ex) {
             response.setContentType("application/json");
