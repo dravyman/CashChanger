@@ -19,12 +19,12 @@ public class User {
 
     public void decreaseCash(long amount) {
         this.currentMoney -= amount;
-        System.out.println("#### " + login + ": " + (currentMoney + amount) + " -> " + currentMoney);
+        DataAdapter.setChanged();
     }
 
     public void increaseCash(long amount) {
         this.currentMoney += amount;
-        System.out.println("#### " + login + ": " + (currentMoney - amount) + " -> " + currentMoney);
+        DataAdapter.setChanged();
     }
 
     public String toJSONString() {

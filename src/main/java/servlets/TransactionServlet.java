@@ -54,6 +54,7 @@ public class TransactionServlet extends HttpServlet {
         checkAmount(amount);
         checkAccountCash(userFrom, amount);
         checkUserExists(userTo);
+        checkTheSameUser(userFrom, userTo);
         DataAdapter.getUser(userFrom).decreaseCash(amount);
         DataAdapter.getUser(userTo).increaseCash(amount);
         return new InfoException(AlertType.INFORMATION.name(), "Успех", "Перевод средств осуществлен успешно", "Вы перевели сумму = " + amount);
@@ -74,6 +75,12 @@ public class TransactionServlet extends HttpServlet {
     private void checkUserExists(String userTo) throws InfoException {
         if (DataAdapter.getUser(userTo) == null) {
             throw new InfoException(AlertType.ERROR.name(), "Неудача", "Перевод средств не осуществлен", "Пользователь не найден");
+        }
+    }
+
+    private void checkTheSameUser(String userFrom, String userTo) throws InfoException {
+        if (userFrom.equals(userTo)) {
+            throw new InfoException(AlertType.ERROR.name(), "Неудача", "Перевод средств не осуществлен", "Пользователь должен быть другим лицом");
         }
     }
 }
