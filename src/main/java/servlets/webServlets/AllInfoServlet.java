@@ -17,16 +17,8 @@ public class AllInfoServlet extends CopyHtmlPageServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("#### Get to AllInfoServlet");
-
-        HttpSession session = request.getSession(true);
-        User user = (User) (session.getAttribute(Global.session_attr_currentUser));
-
-        if (user == null || user.getLogin().isEmpty()) {
-            request.getRequestDispatcher("/login").forward(request, response);
-        } else {
             prepareAllInfoReplacments();
             sendHtmlPageWithReplace(response, "/webapp/html/allUsers.html", replacements);
-        }
     }
 
     private void prepareAllInfoReplacments() {

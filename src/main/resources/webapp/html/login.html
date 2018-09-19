@@ -1,11 +1,23 @@
 <html>
 <head>
     <title>Cash changer</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <title>Cash changer</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
 </head>
 <body>
-<div class = "container"><div align="center">
+<div class="container"><div class="row">
+    <div class="col-xs-6">
+        <h2 style="color: #414F3F;"><span class="fa fa-revolut fa-credit-card"></span> Login page</h2>
+    </div>
+    <div class="col-xs-6">
+        <form action="info" method="get" style="text-align: right;">
+            <button name="submit" class="btn btn-sm btn-primary" value="info" type="submit" style="position: absolute;right: 20px;top: 20px;">All info</button>
+        </form>
+    </div>
+</div></div>
+<div class = "container" style="text-align: center">
     <div class="row">
         <h2>Hello! Please fill your login</h2>
         <div class="wrapper col-xs-offset-4 col-xs-4">
@@ -16,6 +28,35 @@
             </form>
         </div>
     </div>
-</div></div>
+</div>
+<style>
+    .fa-danger {
+        background-color: #fff;
+        color: #d43f3a;
+        border-color: #d43f3a
+    }
+    .fa-warning {
+        background-color: #fff;
+        color: #eea236;
+        border-color: #eea236
+    }
+    .fa-info {
+        background-color: #fff;
+        color: #5bc0de;
+        border-color: #5bc0de
+    }
+    .fa-revolut {
+        background-color: #c7cdcd;
+        color: #294ebe;
+        border-color: #6246d3;
+    }
+    .req.ng-invalid {
+        background-color: #fae2e2;
+    }
+
+    .req.ng-invalid:focus {
+        background-color: transparent;
+    }
+</style>
 </body>
 </html>
