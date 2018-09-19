@@ -20,7 +20,7 @@ public class AccountServlet extends CopyHtmlPageServlet {
         if (user == null || user.getLogin().isEmpty()) {
             request.getRequestDispatcher("/login").forward(request, response);
         } else {
-            prepareAccpontReplacements(user);
+            prepareReplacements(user);
             sendHtmlPageWithReplace(response, "/webapp/html/account.html", replacements);
         }
     }
@@ -40,7 +40,8 @@ public class AccountServlet extends CopyHtmlPageServlet {
 
     }
 
-    private void prepareAccpontReplacements(User user) {
+    protected void prepareReplacements(User user) {
+        super.prepareReplacements();
         replacements.put("#replaceMe1", "\"" + user.getLogin() + "\"");
         replacements.put("#replaceMe2", String.valueOf(user.getCurrentMoney()));
     }

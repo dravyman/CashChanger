@@ -17,11 +17,12 @@ public class AllInfoServlet extends CopyHtmlPageServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("#### Get to AllInfoServlet");
-            prepareAllInfoReplacments();
-            sendHtmlPageWithReplace(response, "/webapp/html/allUsers.html", replacements);
+        prepareReplacements();
+        sendHtmlPageWithReplace(response, "/webapp/html/allUsers.html", replacements);
     }
 
-    private void prepareAllInfoReplacments() {
+    protected void prepareReplacements() {
+        super.prepareReplacements();
         StringBuilder allUsers = new StringBuilder("<ol id=\"allUsers\">");
         DataAdapter.getAllUser().forEach((login, userInfo) -> {
             String userInfoLine = "<li>Login: " + login + " : " + userInfo.getCurrentMoney() + "</li>";
